@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work — GLITCHKID</title>
+<meta name="description" content="Every edit, cut entirely in Blender's VSE — music videos, short films, VFX comps and colour grades.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#050505; --bg-2:#0b0a0c; --fg:#ece9e4; --fg-dim:#8d8a91; --fg-faint:#4a474e;
+    --accent:#ff1e3c; --accent-2:#8b5cf6; --line: rgba(236,233,228,0.14);
+    --serif: 'Fraunces', Georgia, serif; --sans: 'Space Grotesk', Arial, sans-serif;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px);
+  }
+  html{ scroll-padding-top: env(safe-area-inset-top,0px); }
+  *,*::before,*::after{ box-sizing: inherit; }
+  html,body{ background:var(--bg); color:var(--fg); margin:0; width:100%; overflow-x:hidden; font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+  ::selection{ background:var(--accent); color:#0a0a0a; }
+  a{ color:inherit; text-decoration:none; }
+  button,select{ font-family:inherit; }
+  #grain{ position:fixed; inset:0; z-index:9998; pointer-events:none; opacity:.05; mix-blend-mode:overlay; }
+  .cursor{ position:fixed; top:0; left:0; width:14px; height:14px; border-radius:50%; background:var(--fg); pointer-events:none; z-index:9999; mix-blend-mode:difference; transform:translate(-50%,-50%); transition:width .25s ease,height .25s ease; will-change:transform; }
+  .cursor.play{ width:64px; height:64px; background:transparent; border:1.5px solid var(--fg); }
+  .cursor-label{ position:fixed; top:0; left:0; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); font-size:10px; letter-spacing:.12em; opacity:0; transition:opacity .2s ease; white-space:nowrap; }
+  @media (hover:none){ .cursor,.cursor-label{ display:none; } }
+  .wrap{ max-width:1400px; margin:0 auto; padding:0 clamp(20px,4vw,64px); }
+  section{ position:relative; }
+  header{ position:fixed; top:0; left:0; right:0; z-index:500; padding:clamp(18px,2.4vw,28px) clamp(20px,4vw,64px); padding-top:calc(clamp(18px,2.4vw,28px) + env(safe-area-inset-top,0px)); display:flex; align-items:center; justify-content:space-between; mix-blend-mode:difference; }
+  .wordmark{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(18px,2vw,22px); letter-spacing:-0.01em; }
+  nav ul{ list-style:none; display:flex; gap:clamp(18px,2.6vw,36px); margin:0; padding:0; }
+  nav a{ font-size:12px; letter-spacing:.08em; position:relative; padding-bottom:2px; }
+  nav a::after{ content:''; position:absolute; left:0; bottom:0; width:100%; height:1px; background:var(--fg); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.65,0,.35,1); }
+  nav a:hover::after,nav a.active::after{ transform:scaleX(1); transform-origin:left; }
+  .sfx-toggle{ font-size:11px; letter-spacing:.08em; color:var(--fg-dim); border:1px solid var(--line); padding:6px 12px; border-radius:999px; }
+  .sfx-toggle:hover{ color:var(--fg); border-color:var(--fg-dim); }
+
+  .page-hero{ min-height:56vh; display:flex; flex-direction:column; justify-content:flex-end; padding-top:calc(120px + env(safe-area-inset-top,0px)); padding-bottom:44px; }
+  .page-kicker{ font-size:12px; letter-spacing:.18em; color:var(--fg-dim); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .page-kicker .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); }
+  h1.impact{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(48px,9vw,128px); line-height:.9; letter-spacing:-0.015em; margin:0; }
+  .page-desc{ max-width:420px; font-size:14.5px; line-height:1.6; color:var(--fg-dim); margin-top:20px; }
+
+  .filters{ display:flex; flex-wrap:wrap; gap:10px; padding: 30px 0 50px; border-bottom:1px solid var(--line); margin-bottom: clamp(36px,5vw,56px); }
+  .filter-btn{ border:1px solid var(--line); padding:9px 18px; border-radius:999px; font-size:12px; letter-spacing:.06em; color:var(--fg-dim); transition: all .25s ease; }
+  .filter-btn:hover{ color:var(--fg); border-color:var(--fg-dim); }
+  .filter-btn.active{ background:var(--fg); color:#050505; border-color:var(--fg); }
+
+  .work{ padding-bottom: clamp(90px,10vw,140px); }
+  .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:clamp(14px,1.6vw,22px); }
+  .card{ position:relative; border:1px solid var(--line); overflow:hidden; cursor:pointer; grid-column:span 4; aspect-ratio:4/5; background:#0c0c0d; transition: opacity .35s ease, transform .35s ease; }
+  @media (max-width:960px){ .card{ grid-column:span 6; } }
+  @media (max-width:620px){ .card{ grid-column:span 12; aspect-ratio:4/3; } }
+  .card.hide{ display:none; }
+  .card-plate{ position:absolute; inset:0; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+  .card:hover .card-plate{ transform:scale(1.05); }
+  .card-grain{ position:absolute; inset:0; opacity:.5; mix-blend-mode:overlay; background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.25) 0 1px, transparent 1px 3px); }
+  .card-face{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(16px,2vw,24px); z-index:2; }
+  .card-face .top{ display:flex; justify-content:space-between; font-size:10.5px; letter-spacing:.1em; color:rgba(255,255,255,.75); }
+  .card-face h4{ font-family:var(--serif); font-style:italic; font-weight:600; color:#fff; margin:0; font-size:clamp(19px,2.2vw,27px); line-height:1.05; }
+  .card-face .tags{ font-size:10.5px; letter-spacing:.06em; color:rgba(255,255,255,.6); margin-top:8px; }
+  .card::before{ content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.65) 100%); }
+
+  .modal{ position:fixed; inset:0; z-index:2000; background:#020202; visibility:hidden; opacity:0; display:flex; flex-direction:column; }
+  .modal.open{ visibility:visible; }
+  .modal-top{ display:flex; justify-content:space-between; align-items:center; padding:clamp(18px,3vw,32px); }
+  .modal-close{ font-size:11px; letter-spacing:.12em; color:var(--fg-dim); border:1px solid var(--line); padding:8px 16px; border-radius:999px; }
+  .modal-close:hover{ color:var(--fg); }
+  .modal-body{ flex:1; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .modal-plate{ position:absolute; inset:0; }
+  .modal-viz{ position:absolute; left:0; right:0; bottom:0; height:64px; display:flex; align-items:flex-end; gap:3px; padding:0 clamp(20px,4vw,60px) 18px; z-index:2; }
+  .modal-viz i{ flex:1; background:rgba(255,255,255,.85); border-radius:2px 2px 0 0; }
+  .modal-info{ position:relative; z-index:2; text-align:center; color:#fff; padding:0 24px; }
+  .modal-info .kicker{ font-size:11px; letter-spacing:.18em; color:rgba(255,255,255,.65); margin-bottom:12px; }
+  .modal-info h3{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(32px,6vw,84px); margin:0; }
+  .modal-info p{ max-width:460px; margin:16px auto 0; font-size:13.5px; line-height:1.6; color:rgba(255,255,255,.6); }
+
+  .cta-strip{ padding: clamp(60px,8vw,100px) 0; border-top:1px solid var(--line); text-align:center; }
+  .cta-strip h2{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(30px,5vw,58px); margin:0 0 20px; }
+  .cta-btn{ display:inline-block; border:1px solid var(--line); padding:14px 30px; border-radius:999px; font-size:12px; letter-spacing:.1em; }
+  .cta-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  footer{ padding: 20px 0 clamp(40px,6vw,60px); }
+  footer .base{ display:flex; justify-content:space-between; font-size:11px; color:var(--fg-faint); letter-spacing:.05em; flex-wrap:wrap; gap:10px; border-top:1px solid var(--line); padding-top:24px; }
+
+  [data-aos]{ opacity:0; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; } }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-label" id="cursorLabel">VIEW</div>
+
+<header>
+  <a href="index.html" class="wordmark">GLITCHKID</a>
+  <nav>
+    <ul>
+      <li><a href="work.html" class="active">Work</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <button class="sfx-toggle" id="sfxToggle" aria-pressed="false">SFX OFF</button>
+</header>
+
+<main>
+  <section class="page-hero wrap">
+    <div class="page-kicker"><span class="dot"></span> FULL ARCHIVE</div>
+    <h1 class="impact">ALL THE<br>CUTS.</h1>
+    <p class="page-desc">Twelve edits, four disciplines, one timeline. Everything here was cut, tracked and graded inside Blender's VSE — filter by what you came for.</p>
+  </section>
+
+  <section class="work">
+    <div class="wrap">
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="MUSIC VIDEO">MUSIC VIDEO</button>
+        <button class="filter-btn" data-filter="SHORT FILM">SHORT FILM</button>
+        <button class="filter-btn" data-filter="VFX COMP">VFX COMP</button>
+        <button class="filter-btn" data-filter="COLOUR GRADE">COLOUR GRADE</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="cta-strip wrap">
+    <h2>Got a cut in mind?</h2>
+    <a href="contact.html" class="cta-btn">START A PROJECT</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="base">
+      <span>© 2026 GLITCHKID — CUT IN BLENDER</span>
+      <span id="backTop" style="cursor:pointer;">BACK TO TOP ↑</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-top">
+    <a href="index.html" class="wordmark">GLITCHKID</a>
+    <button class="modal-close" id="modalClose">CLOSE ✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-plate" id="modalPlate"></div>
+    <div class="modal-info">
+      <div class="kicker" id="modalKicker">CATEGORY — YEAR</div>
+      <h3 id="modalTitle">TITLE</h3>
+      <p id="modalDesc">Description.</p>
+    </div>
+    <div class="modal-viz" id="modalViz"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = window.matchMedia('(hover:none)').matches;
+  gsap.registerPlugin(ScrollTrigger);
+
+  var EDITS = [
+    { title:"NEON FUNERAL",   cat:"MUSIC VIDEO",  year:"2025", c1:"#ff1e3c", c2:"#1a0508", desc:"A three-minute match-cut sequence built entirely around one strobing chord change, tracked frame by frame in the VSE." },
+    { title:"GHOST FRAME",    cat:"SHORT FILM",   year:"2025", c1:"#8b5cf6", c2:"#0c0714", desc:"Rotoscoped double-exposure sequence composited from six camera passes into one continuous hallway shot." },
+    { title:"OFFLINE STATE",  cat:"VFX COMP",     year:"2024", c1:"#22d3a5", c2:"#031412", desc:"CRT-glitch overlay system built from scratch in the compositor — no plugins, just nodes and noise." },
+    { title:"ZERO GRAVITY",   cat:"MUSIC VIDEO",  year:"2024", c1:"#ff8a1e", c2:"#170d02", desc:"Match-tracked rig removal across 40 shots to fake a full zero-gravity performance on a warehouse floor." },
+    { title:"STATIC HEART",   cat:"COLOUR GRADE", year:"2024", c1:"#ff1e3c", c2:"#120204", desc:"A full-length grade pass built around a single crimson curve, pushed until skin tones start to break." },
+    { title:"LAST TAPE",      cat:"SHORT FILM",   year:"2023", c1:"#4a4dff", c2:"#050313", desc:"VHS degrade simulation built with layered noise nodes, timed to drop out exactly on the beat." },
+    { title:"CONCRETE BLOOM", cat:"MUSIC VIDEO",  year:"2023", c1:"#ff1e3c", c2:"#170206", desc:"Split-screen performance edit synced to a triplet hi-hat pattern, hand-timed cut by cut." },
+    { title:"DEAD PIXEL",     cat:"VFX COMP",     year:"2023", c1:"#22d3a5", c2:"#02120f", desc:"Datamosh-style compression artefacts recreated as a controllable node group for repeat use." },
+    { title:"AFTERGLOW",      cat:"COLOUR GRADE", year:"2023", c1:"#ff8a1e", c2:"#1a0d02", desc:"Warm halation grade built to mimic expired film stock without a single LUT." },
+    { title:"SLEEP PARALYSIS",cat:"SHORT FILM",   year:"2022", c1:"#8b5cf6", c2:"#0a0512", desc:"Nine-minute one-shot illusion stitched from fourteen separate takes at invisible cut points." },
+    { title:"RUST BELT",      cat:"MUSIC VIDEO",  year:"2022", c1:"#4a4dff", c2:"#040317", desc:"Industrial-texture compositing layered over handheld footage to fake a derelict factory location." },
+    { title:"SIGNAL LOSS",    cat:"VFX COMP",     year:"2022", c1:"#ff1e3c", c2:"#130103", desc:"Procedural interference pattern generator built entirely with shader nodes for a broken-broadcast look." }
+  ];
+
+  /* grain */
+  var grain=document.getElementById('grain'), gctx=grain.getContext('2d');
+  function sizeGrain(){ grain.width=innerWidth; grain.height=innerHeight; }
+  sizeGrain();
+  function drawGrain(){
+    var w=grain.width,h=grain.height,imgData=gctx.createImageData(w,h),buf=imgData.data;
+    for(var i=0;i<buf.length;i+=4){ var v=Math.random()*255; buf[i]=v;buf[i+1]=v;buf[i+2]=v;buf[i+3]=255; }
+    gctx.putImageData(imgData,0,0);
+  }
+  var grainTimer;
+  function loopGrain(){ if(reduced){ drawGrain(); return; } drawGrain(); grainTimer=setTimeout(loopGrain,90); }
+  loopGrain();
+  window.addEventListener('resize', sizeGrain);
+
+  /* audio blips */
+  var actx=null, sfxOn=false;
+  function ensureAudio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
+  function blip(freq,dur,type){
+    if(!sfxOn||!actx) return;
+    var t=actx.currentTime, osc=actx.createOscillator(), gain=actx.createGain();
+    osc.type=type||'square'; osc.frequency.setValueAtTime(freq,t);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(40,freq*0.4), t+dur);
+    gain.gain.setValueAtTime(0.0001,t); gain.gain.exponentialRampToValueAtTime(0.05,t+0.01); gain.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    osc.connect(gain).connect(actx.destination); osc.start(t); osc.stop(t+dur+0.02);
+  }
+  document.getElementById('sfxToggle').addEventListener('click', function(){
+    ensureAudio(); sfxOn=!sfxOn; this.textContent = sfxOn?'SFX ON':'SFX OFF'; this.setAttribute('aria-pressed', sfxOn);
+    if(sfxOn) blip(660,0.08,'triangle');
+  });
+
+  /* cursor */
+  if(!isTouch){
+    var cur=document.getElementById('cursor'), curLabel=document.getElementById('cursorLabel');
+    var mx=0,my=0,cx=0,cy=0;
+    window.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
+    (function raf(){
+      cx+=(mx-cx)*0.18; cy+=(my-cy)*0.18;
+      cur.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)';
+      curLabel.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%, calc(-50% + 46px))';
+      requestAnimationFrame(raf);
+    })();
+    document.addEventListener('mouseover', function(e){
+      var t = e.target.closest('.card');
+      if(t){ cur.classList.add('play'); curLabel.style.opacity=1; }
+      else { cur.classList.remove('play'); curLabel.style.opacity=0; }
+    });
+  }
+
+  /* build grid */
+  var grid=document.getElementById('grid');
+  EDITS.forEach(function(edit, idx){
+    var card=document.createElement('div');
+    card.className='card'; card.dataset.idx=idx; card.dataset.cat=edit.cat;
+    card.innerHTML =
+      '<div class="card-plate" style="background:linear-gradient(155deg,'+edit.c1+','+edit.c2+')"></div>'+
+      '<div class="card-grain"></div>'+
+      '<div class="card-face"><div class="top"><span>'+String(idx+1).padStart(2,'0')+'</span><span>'+edit.year+'</span></div>'+
+      '<div><h4>'+edit.title+'</h4><div class="tags">'+edit.cat+'</div></div></div>';
+    grid.appendChild(card);
+  });
+
+  gsap.utils.toArray('.card').forEach(function(card,i){
+    gsap.set(card,{ y:30, autoAlpha:0 });
+    ScrollTrigger.create({ trigger:card, start:'top 94%', once:true, onEnter:function(){
+      gsap.to(card,{ y:0, autoAlpha:1, duration:.7, delay:(i%4)*0.06, ease:'power3.out' });
+    }});
+  });
+  gsap.set('.page-hero, .filters', { y:24 });
+  gsap.to('.page-hero, .filters', { y:0, autoAlpha:1, duration:.9, ease:'power3.out', stagger:.1, delay:.1 });
+
+  /* filters */
+  document.querySelectorAll('.filter-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.dataset.filter;
+      document.querySelectorAll('.card').forEach(function(card){
+        var show = (f==='all' || card.dataset.cat===f);
+        gsap.to(card, { autoAlpha: show?1:0, duration:.25, onComplete:function(){ card.classList.toggle('hide', !show); } });
+      });
+      blip(500,0.05,'square');
+    });
+  });
+
+  /* modal */
+  var modal=document.getElementById('modal'), modalPlate=document.getElementById('modalPlate');
+  var modalKicker=document.getElementById('modalKicker'), modalTitle=document.getElementById('modalTitle'), modalDesc=document.getElementById('modalDesc');
+  var modalViz=document.getElementById('modalViz'), vizBars=[], vizRAF;
+  for(var b=0;b<40;b++){ var bar=document.createElement('i'); modalViz.appendChild(bar); vizBars.push(bar); }
+  function animateViz(){ vizBars.forEach(function(bar){ bar.style.height=(6+Math.random()*58)+'px'; }); vizRAF=requestAnimationFrame(function(){ setTimeout(animateViz,90); }); }
+  function openModal(idx){
+    var edit=EDITS[idx];
+    modalPlate.style.background='linear-gradient(160deg,'+edit.c1+','+edit.c2+')';
+    modalKicker.textContent=edit.cat+' — '+edit.year; modalTitle.textContent=edit.title; modalDesc.textContent=edit.desc;
+    modal.classList.add('open'); document.body.style.overflow='hidden';
+    gsap.fromTo(modal,{autoAlpha:0},{autoAlpha:1,duration:.5,ease:'power2.out'});
+    gsap.fromTo('#modalPlate',{scale:1.15},{scale:1,duration:.9,ease:'power3.out'});
+    gsap.fromTo('.modal-info',{y:24,autoAlpha:0},{y:0,autoAlpha:1,duration:.6,delay:.15,ease:'power3.out'});
+    if(!reduced) animateViz();
+  }
+  function closeModal(){
+    gsap.to(modal,{autoAlpha:0,duration:.35,ease:'power2.in',onComplete:function(){
+      modal.classList.remove('open'); document.body.style.overflow=''; cancelAnimationFrame(vizRAF);
+    }});
+  }
+  grid.addEventListener('click', function(e){ var card=e.target.closest('.card'); if(card) openModal(+card.dataset.idx); });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  window.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
+  document.getElementById('backTop').addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior: reduced?'auto':'smooth' });
+  });
+})();
+</script>
+</body>
+</html>

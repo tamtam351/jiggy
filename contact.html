@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact — GLITCHKID</title>
+<meta name="description" content="Start a project with GLITCHKID — Blender-native video editing, VFX compositing and colour grading.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#050505; --bg-2:#0b0a0c; --fg:#ece9e4; --fg-dim:#8d8a91; --fg-faint:#4a474e;
+    --accent:#ff1e3c; --accent-2:#8b5cf6; --line: rgba(236,233,228,0.14);
+    --serif: 'Fraunces', Georgia, serif; --sans: 'Space Grotesk', Arial, sans-serif;
+    box-sizing: border-box; padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px);
+  }
+  html{ scroll-padding-top: env(safe-area-inset-top,0px); }
+  *,*::before,*::after{ box-sizing: inherit; }
+  html,body{ background:var(--bg); color:var(--fg); margin:0; width:100%; overflow-x:hidden; font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+  ::selection{ background:var(--accent); color:#0a0a0a; }
+  a{ color:inherit; text-decoration:none; }
+  button,input,select,textarea{ font-family:inherit; }
+  #grain{ position:fixed; inset:0; z-index:9998; pointer-events:none; opacity:.05; mix-blend-mode:overlay; }
+  .cursor{ position:fixed; top:0; left:0; width:14px; height:14px; border-radius:50%; background:var(--fg); pointer-events:none; z-index:9999; mix-blend-mode:difference; transform:translate(-50%,-50%); transition:width .25s ease,height .25s ease; will-change:transform; }
+  @media (hover:none){ .cursor{ display:none; } }
+  .wrap{ max-width:1200px; margin:0 auto; padding:0 clamp(20px,4vw,64px); }
+  section{ position:relative; }
+  header{ position:fixed; top:0; left:0; right:0; z-index:500; padding:clamp(18px,2.4vw,28px) clamp(20px,4vw,64px); padding-top:calc(clamp(18px,2.4vw,28px) + env(safe-area-inset-top,0px)); display:flex; align-items:center; justify-content:space-between; mix-blend-mode:difference; }
+  .wordmark{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(18px,2vw,22px); letter-spacing:-0.01em; }
+  nav ul{ list-style:none; display:flex; gap:clamp(18px,2.6vw,36px); margin:0; padding:0; }
+  nav a{ font-size:12px; letter-spacing:.08em; position:relative; padding-bottom:2px; }
+  nav a::after{ content:''; position:absolute; left:0; bottom:0; width:100%; height:1px; background:var(--fg); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.65,0,.35,1); }
+  nav a:hover::after,nav a.active::after{ transform:scaleX(1); transform-origin:left; }
+  .sfx-toggle{ font-size:11px; letter-spacing:.08em; color:var(--fg-dim); border:1px solid var(--line); padding:6px 12px; border-radius:999px; }
+  .sfx-toggle:hover{ color:var(--fg); border-color:var(--fg-dim); }
+
+  .page-hero{ min-height:48vh; display:flex; flex-direction:column; justify-content:flex-end; padding-top:calc(120px + env(safe-area-inset-top,0px)); padding-bottom:36px; }
+  .status-badge{ display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:.1em; border:1px solid var(--line); padding:8px 16px; border-radius:999px; color:var(--fg-dim); margin-bottom:22px; }
+  .status-badge i{ width:7px; height:7px; border-radius:50%; background:#22d3a5; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+  h1.impact{ font-family:var(--serif); font-style:italic; font-weight:600; font-size:clamp(56px,11vw,150px); line-height:.88; letter-spacing:-0.015em; margin:0; }
+  .page-desc{ max-width:440px; font-size:14.5px; line-height:1.6; color:var(--fg-dim); margin-top:20px; }
+
+  .contact-main{ padding: clamp(50px,7vw,90px) 0 clamp(90px,10vw,140px); }
+  .contact-grid{ display:grid; grid-template-columns: 1.5fr 1fr; gap: clamp(40px,5vw,72px); align-items:start; }
+  @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; } }
+
+  form{ display:flex; flex-direction:column; gap:22px; }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-size:11px; letter-spacing:.1em; color:var(--fg-faint); }
+  .field input, .field select, .field textarea{
+    background:transparent; border:none; border-bottom:1px solid var(--line); color:var(--fg);
+    padding:10px 2px; font-size:16px; outline:none; transition:border-color .25s ease;
+  }
+  .field select{ appearance:none; -webkit-appearance:none; background-image: linear-gradient(45deg, transparent 50%, var(--fg-dim) 50%), linear-gradient(135deg, var(--fg-dim) 50%, transparent 50%); background-position: calc(100% - 12px) 18px, calc(100% - 6px) 18px; background-size: 6px 6px, 6px 6px; background-repeat:no-repeat; }
+  .field select option{ background:#0c0c0d; color:var(--fg); }
+  .field textarea{ resize:vertical; min-height:96px; font-family:inherit; line-height:1.5; }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--accent); }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:520px){ .row2{ grid-template-columns:1fr; } }
+
+  .submit-btn{
+    align-self:flex-start; margin-top:8px; background:var(--fg); color:#050505; border:none;
+    padding:16px 34px; border-radius:999px; font-size:12.5px; letter-spacing:.1em; font-weight:500;
+    display:inline-flex; align-items:center; gap:10px; transition: transform .2s ease, background .2s ease;
+  }
+  .submit-btn:hover{ background:var(--accent); color:#fff; }
+  .submit-btn span{ transition: transform .3s cubic-bezier(.65,0,.35,1); }
+  .submit-btn:hover span{ transform: translateX(6px); }
+  .form-note{ font-size:12px; color:var(--fg-faint); margin-top:-6px; }
+
+  .info-col{ border-top:1px solid var(--line); padding-top: clamp(24px,3vw,32px); }
+  .info-block{ margin-bottom: clamp(28px,3.6vw,40px); }
+  .info-block h5{ font-size:11px; letter-spacing:.1em; color:var(--fg-faint); margin:0 0 12px; font-weight:400; }
+  .info-block a, .info-block p{ display:block; font-size:15px; color:var(--fg-dim); margin:0 0 8px; }
+  .info-block a:hover{ color:var(--fg); }
+
+  .faq-item{ border-top:1px solid var(--line); padding: 16px 0; cursor:pointer; }
+  .faq-item:last-child{ border-bottom:1px solid var(--line); }
+  .faq-q{ display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--fg); }
+  .faq-q .plus{ transition: transform .3s ease; color:var(--fg-dim); }
+  .faq-item.open .faq-q .plus{ transform: rotate(45deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition: max-height .35s ease; }
+  .faq-item.open .faq-a{ max-height:200px; }
+  .faq-a p{ font-size:13.5px; line-height:1.6; color:var(--fg-dim); margin:12px 0 4px; max-width:480px; }
+
+  footer{ padding: 0 0 clamp(40px,6vw,60px); border-top:1px solid var(--line); }
+  footer .base{ display:flex; justify-content:space-between; margin-top:24px; font-size:11px; color:var(--fg-faint); letter-spacing:.05em; flex-wrap:wrap; gap:10px; }
+
+  [data-aos]{ opacity:0; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; } }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <a href="index.html" class="wordmark">GLITCHKID</a>
+  <nav>
+    <ul>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+  <button class="sfx-toggle" id="sfxToggle" aria-pressed="false">SFX OFF</button>
+</header>
+
+<main>
+  <section class="page-hero wrap">
+    <div class="status-badge"><i></i> TAKING NEW PROJECTS — REPLIES IN 24–48H</div>
+    <h1 class="impact">SEND<br>IT.</h1>
+    <p class="page-desc">Tell me what you're making and what it needs to feel like. No briefs are too rough — half-formed ideas cut just as well as finished treatments.</p>
+  </section>
+
+  <section class="contact-main">
+    <div class="wrap contact-grid">
+      <form id="projectForm" data-aos="fade-up">
+        <div class="row2">
+          <div class="field">
+            <label for="name">NAME</label>
+            <input id="name" name="name" type="text" required placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="email">EMAIL</label>
+            <input id="email" name="email" type="email" required placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="type">PROJECT TYPE</label>
+            <select id="type" name="type">
+              <option>Music Video</option>
+              <option>Short Film</option>
+              <option>VFX Compositing</option>
+              <option>Colour Grade</option>
+              <option>Something Else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="budget">BUDGET RANGE</label>
+            <select id="budget" name="budget">
+              <option>Under ₦300,000</option>
+              <option>₦300,000 – ₦800,000</option>
+              <option>₦800,000 – ₦2,000,000</option>
+              <option>Above ₦2,000,000</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="message">THE BRIEF</label>
+          <textarea id="message" name="message" required placeholder="What's the project? What's the timeline? Send links to references if you've got them."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">SEND THE BRIEF <span>→</span></button>
+        <p class="form-note" id="formNote">Opens your email app with everything filled in — nothing leaves this page until you hit send there.</p>
+      </form>
+
+      <div class="info-col" data-aos="fade-up">
+        <div class="info-block">
+          <h5>DIRECT</h5>
+          <a href="mailto:hello@glitchkid.studio">hello@glitchkid.studio</a>
+          <p>Lagos, Nigeria — open to remote work</p>
+        </div>
+        <div class="info-block">
+          <h5>FOLLOW THE CUTS</h5>
+          <a href="#">Instagram</a>
+          <a href="#">YouTube</a>
+          <a href="#">Twitter / X</a>
+        </div>
+        <div class="info-block">
+          <div class="faq-item">
+            <div class="faq-q"><span>How fast can you turn a video around?</span><span class="plus">+</span></div>
+            <div class="faq-a"><p>Most single edits ship in 5–10 working days depending on footage volume and how heavy the VFX pass is.</p></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span>How many revision rounds are included?</span><span class="plus">+</span></div>
+            <div class="faq-a"><p>Two rounds are built into every quote. Anything past that is billed hourly and agreed before I touch the timeline.</p></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span>Do you shoot, or edit only?</span><span class="plus">+</span></div>
+            <div class="faq-a"><p>Edit, VFX, grade and sound design — all inside Blender. If a shoot is needed I can bring in people I trust.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="base">
+      <span>© 2026 GLITCHKID — CUT IN BLENDER</span>
+      <span id="backTop" style="cursor:pointer;">BACK TO TOP ↑</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = window.matchMedia('(hover:none)').matches;
+
+  var grain=document.getElementById('grain'), gctx=grain.getContext('2d');
+  function sizeGrain(){ grain.width=innerWidth; grain.height=innerHeight; }
+  sizeGrain();
+  function drawGrain(){
+    var w=grain.width,h=grain.height,imgData=gctx.createImageData(w,h),buf=imgData.data;
+    for(var i=0;i<buf.length;i+=4){ var v=Math.random()*255; buf[i]=v;buf[i+1]=v;buf[i+2]=v;buf[i+3]=255; }
+    gctx.putImageData(imgData,0,0);
+  }
+  var grainTimer;
+  function loopGrain(){ if(reduced){ drawGrain(); return; } drawGrain(); grainTimer=setTimeout(loopGrain,90); }
+  loopGrain();
+  window.addEventListener('resize', sizeGrain);
+
+  var actx=null, sfxOn=false;
+  function ensureAudio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
+  function blip(freq,dur,type){
+    if(!sfxOn||!actx) return;
+    var t=actx.currentTime, osc=actx.createOscillator(), gain=actx.createGain();
+    osc.type=type||'square'; osc.frequency.setValueAtTime(freq,t);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(40,freq*0.4), t+dur);
+    gain.gain.setValueAtTime(0.0001,t); gain.gain.exponentialRampToValueAtTime(0.05,t+0.01); gain.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    osc.connect(gain).connect(actx.destination); osc.start(t); osc.stop(t+dur+0.02);
+  }
+  document.getElementById('sfxToggle').addEventListener('click', function(){
+    ensureAudio(); sfxOn=!sfxOn; this.textContent = sfxOn?'SFX ON':'SFX OFF'; this.setAttribute('aria-pressed', sfxOn);
+    if(sfxOn) blip(660,0.08,'triangle');
+  });
+
+  if(!isTouch){
+    var cur=document.getElementById('cursor');
+    var mx=0,my=0,cx=0,cy=0;
+    window.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
+    (function raf(){
+      cx+=(mx-cx)*0.18; cy+=(my-cy)*0.18;
+      cur.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)';
+      requestAnimationFrame(raf);
+    })();
+  }
+
+  if(window.gsap){
+    gsap.set('[data-aos]', { y:26 });
+    gsap.to('[data-aos]', { y:0, autoAlpha:1, duration:.9, ease:'power3.out', stagger:.08, delay:.1 });
+    gsap.set('.page-hero', { y:20 });
+    gsap.to('.page-hero', { y:0, autoAlpha:1, duration:.9, ease:'power3.out' });
+  }
+
+  /* form -> mailto */
+  var form = document.getElementById('projectForm');
+  var formNote = document.getElementById('formNote');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var type = form.type.value;
+    var budget = form.budget.value;
+    var message = form.message.value.trim();
+
+    var subject = 'New project brief — ' + type + ' (' + name + ')';
+    var body =
+      'Name: ' + name + '\n' +
+      'Email: ' + email + '\n' +
+      'Project type: ' + type + '\n' +
+      'Budget range: ' + budget + '\n\n' +
+      'Brief:\n' + message;
+
+    var mailto = 'mailto:hello@glitchkid.studio?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.location.href = mailto;
+    formNote.textContent = 'Opening your email app now — hit send there to reach me.';
+    blip(720,0.1,'triangle');
+  });
+
+  /* faq accordion */
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+      if(!wasOpen) item.classList.add('open');
+      blip(500,0.05,'square');
+    });
+  });
+
+  document.getElementById('backTop').addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior: reduced?'auto':'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
